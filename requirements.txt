@@ -1,0 +1,5 @@
+Flask==2.0.1
+SQLAlchemy==1.4.23
+Werkzeug==2.0.1
+framer-motion==4.1.17
+lucide-react==0.16.0
