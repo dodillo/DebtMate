@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Account - Purchase Tracker{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+  <h2 class="neon-text">Account Management</h2>
+
+  <div class="glass-card">
+    <h3>Friend Requests</h3>
+    {% if friend_requests %}
+      <ul id="friend-requests-list">
+        {% for request in friend_requests %}
+          <li>
+            <span>{{ request.sender.name }} wants to be your friend</span>
+            <div class="friend-request-actions">
+              <button class="accept-btn" data-id="{{ request.id }}">
+                <span class="icon">✓</span> Accept
+              </button>
+              <button class="reject-btn" data-id="{{ request.id }}">
+                <span class="icon">✗</span> Reject
+              </button>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No pending friend requests.</p>
+    {% endif %}
+  </div>
+
+  <div class="glass-card">
+    <h3>Send Friend Request</h3>
+    <form id="send-friend-request-form">
+      <input type="text" id="friend-username" placeholder="Friend's username" required>
+      <button type="submit">Send Request</button>
+    </form>
+  </div>
+
+  <div class="glass-card">
+    <h3>Your Friends</h3>
+    <ul id="friends-list">
+      {% for friend in user.friends %}
+        <li>{{ friend.name }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const sendFriendRequestForm = document.getElementById('send-friend-request-form');
+  const friendRequestsList = document.getElementById('friend-requests-list');
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+  sendFriendRequestForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const friendUsername = document.getElementById('friend-username').value;
+
+    fetch('/send_friend_request', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken
+      },
+      body: JSON.stringify({ friend_username: friendUsername })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        showNotification(data.error, 'error');
+      } else {
+        showNotification(data.message, 'success');
+        document.getElementById('friend-username').value = '';
+      }
+    });
+  });
+
+  if (friendRequestsList) {
+    friendRequestsList.addEventListener('click', function(e) {
+      if (e.target.classList.contains('accept-btn') || e.target.classList.contains('reject-btn')) {
+        const requestId = e.target.dataset.id;
+        const action = e.target.classList.contains('accept-btn') ? 'accept' : 'reject';
+
+        fetch(`/${action}_friend_request/${requestId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            showNotification(data.error, 'error');
+          } else {
+            showNotification(data.message, 'success');
+            e.target.closest('li').remove();
+          }
+        });
+      }
+    });
+  }
+
+  function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to Purchase Tracker - Simplify Shared Expenses{% endblock %}
+
+{% block content %}
+<div class="landing-container fade-in">
+  <section class="hero">
+    <h1 class="gradient-text">Simplify Shared Expenses</h1>
+    <p class="subtitle">Track, split, and settle bills with friends effortlessly</p>
+    <div class="cta-buttons">
+      <a href="{{ url_for('signup') }}" class="cta-button primary">Get Started for Free</a>
+      <a href="#how-it-works" class="cta-button secondary">Learn More</a>
+    </div>
+  </section>
+
+  <section class="features">
+    <h2>Why Choose Purchase Tracker?</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <i class="feature-icon fas fa-money-bill-wave"></i>
+        <h3>Easy Expense Tracking</h3>
+        <p>Log shared expenses quickly and accurately with our intuitive interface.</p>
+      </div>
+      <div class="feature-card">
+        <i class="feature-icon fas fa-user-friends"></i>
+        <h3>Seamless Friend Management</h3>
+        <p>Add friends, create groups, and manage shared expenses effortlessly.</p>
+      </div>
+      <div class="feature-card">
+        <i class="feature-icon fas fa-chart-line"></i>
+        <h3>Real-time Balance Updates</h3>
+        <p>See who owes what at a glance with our dynamic balance calculator.</p>
+      </div>
+      <div class="feature-card">
+        <i class="feature-icon fas fa-lock"></i>
+        <h3>Secure and Private</h3>
+        <p>Your financial data is encrypted and protected with bank-level security.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="how-it-works" class="how-it-works">
+    <h2>How It Works</h2>
+    <div class="steps-container">
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            <h3>Create Your Account</h3>
+            <p>Sign up in seconds and set up your profile. No credit card required.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <h3>Connect with Friends</h3>
+            <p>Invite friends or join existing groups to start sharing expenses.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <h3>Log Expenses</h3>
+            <p>Quickly add expenses and split them among your friends or group members.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <h3>Settle Balances</h3>
+            <p>View real-time balances and settle debts with integrated payment options.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="testimonials">
+    <h2>What Our Users Say</h2>
+    <div class="testimonial-slider">
+      <div class="testimonial-card">
+        <img src="{{ url_for('static', filename='images/user-avatar-1.jpg') }}" alt="Sarah K." class="user-avatar">
+        <blockquote>"Purchase Tracker has revolutionized how my roommates and I manage our shared expenses. It's a game-changer!"</blockquote>
+        <cite>- Sarah K., Grad Student</cite>
+      </div>
+      <div class="testimonial-card">
+        <img src="{{ url_for('static', filename='images/user-avatar-2.jpg') }}" alt="Mike T." class="user-avatar">
+        <blockquote>"I love how easy it is to keep track of expenses during our group trips. No more awkward money conversations!"</blockquote>
+        <cite>- Mike T., Travel Enthusiast</cite>
+      </div>
+      <div class="testimonial-card">
+        <img src="{{ url_for('static', filename='images/user-avatar-3.jpg') }}" alt="Emily R." class="user-avatar">
+        <blockquote>"This app has saved my friendships by keeping our shared expenses transparent and fair. Highly recommended!"</blockquote>
+        <cite>- Emily R., Young Professional</cite>
+      </div>
+    </div>
+    <div class="slider-dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <h2>Ready to Simplify Your Shared Expenses?</h2>
+    <p>Join thousands of satisfied users and start managing your shared finances with ease.</p>
+    <a href="{{ url_for('signup') }}" class="cta-button primary">Sign Up Now - It's Free!</a>
+  </section>
+</div>
+
+<script>
+  // Simple testimonial slider
+  const slider = document.querySelector('.testimonial-slider');
+  const dots = document.querySelectorAll('.dot');
+  let currentSlide = 0;
+
+  function showSlide(index) {
+    slider.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+  }
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      currentSlide = index;
+      showSlide(currentSlide);
+    });
+  });
+
+  // Auto-advance slides every 5 seconds
+  setInterval(() => {
+    currentSlide = (currentSlide + 1) % 3;
+    showSlide(currentSlide);
+  }, 5000);
+</script>
+{% endblock %}
